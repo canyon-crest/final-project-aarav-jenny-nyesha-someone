@@ -2,7 +2,6 @@ package com.chutesandladders;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class GamePanel extends JPanel {
     private static final int BOARD_SIZE = 10;
@@ -12,6 +11,7 @@ public class GamePanel extends JPanel {
 
     public GamePanel(Player[] players) {
         this.players = players;
+        setPreferredSize(new Dimension(TILE_SIZE * BOARD_SIZE, TILE_SIZE * BOARD_SIZE));
         setLayout(new GridLayout(BOARD_SIZE, BOARD_SIZE));
         boardTiles = new JPanel[BOARD_SIZE][BOARD_SIZE];
         initializeBoard();
@@ -23,11 +23,11 @@ public class GamePanel extends JPanel {
                 JPanel tile = new JPanel(new BorderLayout());
                 tile.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 tile.setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
-                
+
                 int position = calculatePosition(row, col);
-                JLabel positionLabel = new JLabel(String.valueOf(position), SwingConstants.CENTER);
-                tile.add(positionLabel, BorderLayout.NORTH);
-                
+                JLabel label = new JLabel(String.valueOf(position), SwingConstants.CENTER);
+                tile.add(label, BorderLayout.NORTH);
+
                 boardTiles[row][col] = tile;
                 add(tile);
             }
@@ -50,34 +50,25 @@ public class GamePanel extends JPanel {
 
     private void drawPlayers(Graphics g) {
         for (int i = 0; i < players.length; i++) {
-            if (players[i] != null) {
-                Point position = getTileCoordinates(players[i].getPosition());
-                g.setColor(i == 0 ? Color.RED : Color.BLUE);
-                g.fillOval(position.x + 10, position.y + 10, 20, 20);
-            }
+            Player p = players[i];
+            Point coords = getTileCoordinates(p.getPosition());
+
+            g.setColor(i == 0 ? Color.RED : Color.BLUE);
+            g.fillOval(coords.x + 10 + (i * 25), coords.y + 30, 20, 20);
         }
+    }
+
+    private Point getTileCoordinates(int position) {
+        if (position < 1 || position > 100) return new Point(0, 0);
+        position--;
+
+        int row = BOARD_SIZE - 1 - (position / BOARD_SIZE);
+        int col = ((BOARD_SIZE - 1 - row) % 2 == 0) ? position % BOARD_SIZE : (BOARD_SIZE - 1 - (position % BOARD_SIZE));
+
+        return new Point(col * TILE_SIZE, row * TILE_SIZE);
     }
 
     public void updatePlayerPosition(Player player) {
         repaint();
-    }
-
-    private Point getTileCoordinates(int position) {
-        if (position < 1 || position > BOARD_SIZE * BOARD_SIZE) {
-            return new Point(0, 0);
-        }
-        
-        position--;
-        
-        int row = BOARD_SIZE - 1 - (position / BOARD_SIZE);
-        int col;
-        
-        if ((BOARD_SIZE - 1 - row) % 2 == 0) {
-            col = position % BOARD_SIZE;
-        } else {
-            col = BOARD_SIZE - 1 - (position % BOARD_SIZE);
-        }
-        
-        return new Point(col * TILE_SIZE, row * TILE_SIZE);
     }
 }

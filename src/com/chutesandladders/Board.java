@@ -5,56 +5,50 @@ import java.util.Map;
 
 public class Board {
     private static final int SIZE = 100;
-    private Map<Integer, Integer> chutes;
-    private Map<Integer, Integer> ladders;
+    private Map<Integer, Jump> jumps;
 
     public Board() {
-        initializeChutesAndLadders();
+        jumps = new HashMap<>();
+        initializeJumps();
     }
 
-    private void initializeChutesAndLadders() {
-        chutes = new HashMap<>();
-        ladders = new HashMap<>();
-        
+    private void initializeJumps() {
         // Chutes
-        chutes.put(16, 6);
-        chutes.put(47, 26);
-        chutes.put(49, 11);
-        chutes.put(56, 53);
-        chutes.put(62, 19);
-        chutes.put(64, 60);
-        chutes.put(87, 24);
-        chutes.put(93, 73);
-        chutes.put(95, 75);
-        chutes.put(98, 78);
-        
+        jumps.put(16, new Chute(16, 6));
+        jumps.put(47, new Chute(47, 26));
+        jumps.put(49, new Chute(49, 11));
+        jumps.put(56, new Chute(56, 53));
+        jumps.put(62, new Chute(62, 19));
+        jumps.put(64, new Chute(64, 60));
+        jumps.put(87, new Chute(87, 24));
+        jumps.put(93, new Chute(93, 73));
+        jumps.put(95, new Chute(95, 75));
+        jumps.put(98, new Chute(98, 78));
+
         // Ladders
-        ladders.put(1, 38);
-        ladders.put(4, 14);
-        ladders.put(9, 31);
-        ladders.put(21, 42);
-        ladders.put(28, 84);
-        ladders.put(36, 44);
-        ladders.put(51, 67);
-        ladders.put(71, 91);
-        ladders.put(80, 100);
+        jumps.put(1, new Ladder(1, 38));
+        jumps.put(4, new Ladder(4, 14));
+        jumps.put(9, new Ladder(9, 31));
+        jumps.put(21, new Ladder(21, 42));
+        jumps.put(28, new Ladder(28, 84));
+        jumps.put(36, new Ladder(36, 44));
+        jumps.put(51, new Ladder(51, 67));
+        jumps.put(71, new Ladder(71, 91));
+        jumps.put(80, new Ladder(80, 100));
     }
 
     public int getNewPosition(int currentPos) {
-        if (chutes.containsKey(currentPos)) {
-            return chutes.get(currentPos);
-        }
-        if (ladders.containsKey(currentPos)) {
-            return ladders.get(currentPos);
+        if (jumps.containsKey(currentPos)) {
+            return jumps.get(currentPos).getTargetPosition();
         }
         return Math.min(currentPos, SIZE);
     }
 
     public boolean isChute(int position) {
-        return chutes.containsKey(position);
+        return jumps.containsKey(position) && jumps.get(position) instanceof Chute;
     }
 
     public boolean isLadder(int position) {
-        return ladders.containsKey(position);
+        return jumps.containsKey(position) && jumps.get(position) instanceof Ladder;
     }
 }

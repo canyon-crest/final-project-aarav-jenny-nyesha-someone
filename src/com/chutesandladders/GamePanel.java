@@ -12,7 +12,8 @@ public class GamePanel extends JPanel {
     public GamePanel(Player[] players) {
         this.players = players;
         setPreferredSize(new Dimension(TILE_SIZE * BOARD_SIZE, TILE_SIZE * BOARD_SIZE));
-        setLayout(new GridLayout(BOARD_SIZE, BOARD_SIZE));
+        //setLayout(new GridLayout(BOARD_SIZE, BOARD_SIZE));
+        setLayout(null);
         boardTiles = new JPanel[BOARD_SIZE][BOARD_SIZE];
         initializeBoard();
     }
@@ -22,8 +23,9 @@ public class GamePanel extends JPanel {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 JPanel tile = new JPanel(new BorderLayout());
                 tile.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                tile.setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
-
+                //tile.setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
+                tile.setOpaque(false);
+                tile.setBounds(col*TILE_SIZE,(BOARD_SIZE-1-row)* TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 int position = calculatePosition(row, col);
                 JLabel label = new JLabel(String.valueOf(position), SwingConstants.CENTER);
                 tile.add(label, BorderLayout.NORTH);
@@ -45,9 +47,35 @@ public class GamePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(4));
+        drawLadders(g2);
+        drawChutes(g2);
         drawPlayers(g);
     }
-
+    private void drawLadders(Graphics2D g) {
+    	drawLineBetweenTiles(g, 4, 14);
+    	drawLineBetweenTiles(g,9,31);
+    	drawLineBetweenTiles(g, 28, 84);
+    	drawLineBetweenTiles(g, 40, 59);
+    	
+    }
+    private void drawChutes(Graphics2D g) {
+    	g.setColor(new Color(178,34,34));
+    	drawLineBetweenTiles(g,98,78);
+    	drawLineBetweenTiles(g,95,75);
+    	drawLineBetweenTiles(g,62,19);
+    	drawLineBetweenTiles(g,48,26);
+    }
+    private void drawLineBetweenTiles(Graphics2D g, int start, int end) {
+    	Point startPt = getTileCenter(start);
+    	Point endPt = getTileCenter(end);
+    	g.drawLine(startPt.x, startPt.y, endPt.x, endPt.y);
+    }
+    private Point getTileCenter(int position) {
+    	Point coords=getTileCoordinates(position);
+    	return new Point(coords.x + TILE_SIZE/2, coords.y + TILE_SIZE/2);
+    }
     private void drawPlayers(Graphics g) {
         for (int i = 0; i < players.length; i++) {
             Player p = players[i];

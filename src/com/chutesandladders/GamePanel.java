@@ -8,16 +8,22 @@ public class GamePanel extends JPanel {
     private static final int TILE_SIZE = 60;
     private JPanel[][] boardTiles;
     private Player[] players;
+    private Image ladderImage;
+    private Image chuteImage;
 
     public GamePanel(Player[] players) {
         this.players = players;
         setPreferredSize(new Dimension(TILE_SIZE * BOARD_SIZE, TILE_SIZE * BOARD_SIZE));
-        //setLayout(new GridLayout(BOARD_SIZE, BOARD_SIZE));
+        setLayout(new GridLayout(BOARD_SIZE, BOARD_SIZE));
         setLayout(null);
         boardTiles = new JPanel[BOARD_SIZE][BOARD_SIZE];
         initializeBoard();
+        loadImages();
     }
-
+    private void loadImages() {
+    	ladderImage = new ImageIcon(getClass().getResource("image/ladders.png")).getImage();
+        chuteImage = new ImageIcon(getClass().getResource("image/snake-2.png")).getImage();
+    }
     private void initializeBoard() {
         for (int row = BOARD_SIZE - 1; row >= 0; row--) {
             for (int col = 0; col < BOARD_SIZE; col++) {
@@ -54,23 +60,32 @@ public class GamePanel extends JPanel {
         drawPlayers(g);
     }
     private void drawLadders(Graphics2D g) {
-    	drawLineBetweenTiles(g, 4, 14);
-    	drawLineBetweenTiles(g,9,31);
-    	drawLineBetweenTiles(g, 28, 84);
-    	drawLineBetweenTiles(g, 40, 59);
+    	drawLineBetweenTiles(g, ladderImage, 4, 14);
+    	drawLineBetweenTiles(g,ladderImage, 9,31);
+    	drawLineBetweenTiles(g, ladderImage, 28, 84);
+    	drawLineBetweenTiles(g, ladderImage, 40, 59);
     	
     }
     private void drawChutes(Graphics2D g) {
-    	g.setColor(new Color(178,34,34));
-    	drawLineBetweenTiles(g,98,78);
-    	drawLineBetweenTiles(g,95,75);
-    	drawLineBetweenTiles(g,62,19);
-    	drawLineBetweenTiles(g,48,26);
+    	//g.setColor(new Color(178,34,34));
+    	drawLineBetweenTiles(g, chuteImage, 98,78);
+    	drawLineBetweenTiles(g, chuteImage, 95,75);
+    	drawLineBetweenTiles(g, chuteImage, 62,19);
+    	drawLineBetweenTiles(g, chuteImage, 48,26);
     }
-    private void drawLineBetweenTiles(Graphics2D g, int start, int end) {
+    private void drawLineBetweenTiles(Graphics2D g, Image img, int start, int end) {
     	Point startPt = getTileCenter(start);
     	Point endPt = getTileCenter(end);
-    	g.drawLine(startPt.x, startPt.y, endPt.x, endPt.y);
+    	double angle = Math.atan2(endPt.y - startPt.y, endPt.x - startPt.x);
+        double distance = startPt.distance(endPt);
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.translate(startPt.x, startPt.y);
+        g2.rotate(angle);
+        int imgWidth = (int) distance;
+        int imgHeight = 30;
+        g2.drawImage(img, 0, -imgHeight / 2, imgWidth, imgHeight, null);
+        g2.dispose();
+    	//g.drawLine(startPt.x, startPt.y, endPt.x, endPt.y);
     }
     private Point getTileCenter(int position) {
     	Point coords=getTileCoordinates(position);

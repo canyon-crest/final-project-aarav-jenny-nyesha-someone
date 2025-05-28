@@ -1,5 +1,6 @@
 package com.chutesandladders;
-
+//defines jump
+//to be used with chutes and ladders
 public abstract class Jump implements Jumpable {
     protected int start;
     protected int end;

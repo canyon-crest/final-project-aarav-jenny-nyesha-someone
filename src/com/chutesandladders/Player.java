@@ -1,5 +1,5 @@
 package com.chutesandladders;
-
+//defines players
 public class Player {
     private String name;
     private int position;
@@ -24,7 +24,8 @@ public class Player {
     }
 
     public void move(int spaces) {
-        position += spaces;
+    	if(position+spaces<=100)
+    		position += spaces;
     }
 
     public boolean isHuman() {

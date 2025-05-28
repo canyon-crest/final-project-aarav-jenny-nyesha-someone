@@ -28,7 +28,7 @@ public class ChutesAndLadders {
         gameActive = true;
         random = new Random();
     }
-
+//set game up
     private void setupUI() {
         mainFrame = new JFrame("Chutes and Ladders Showdown");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,11 +59,14 @@ public class ChutesAndLadders {
 
     private void humanPlayerTurn(int roll) {
         currentPlayer.move(roll);
-        int newPosition = gameBoard.getNewPosition(currentPlayer.getPosition());
-        currentPlayer.setPosition(newPosition);
+        //int newPosition = gameBoard.getNewPosition(currentPlayer.getPosition());
+        //currentPlayer.setPosition(newPosition);
+        
+        int resolvedPosition = resolvePosition(currentPlayer.getPosition());
+        currentPlayer.setPosition(resolvedPosition);
         
         gamePanel.updatePlayerPosition(currentPlayer);
-        controlPanel.updateInfo(currentPlayer.getName() + " rolled a " + roll + " and moved to " + newPosition);
+        controlPanel.updateInfo(currentPlayer.getName() + " rolled a " + roll + " and moved to " + resolvedPosition);
         
         if (checkWinCondition()) {
             gameActive = false;
@@ -76,11 +79,14 @@ public class ChutesAndLadders {
 
     private void aiPlayerTurn(int roll) {
         currentPlayer.move(roll);
-        int newPosition = gameBoard.getNewPosition(currentPlayer.getPosition());
-        currentPlayer.setPosition(newPosition);
+        //int newPosition = gameBoard.getNewPosition(currentPlayer.getPosition());
+        //currentPlayer.setPosition(newPosition);
+        
+        int resolvedPosition = resolvePosition(currentPlayer.getPosition());
+        currentPlayer.setPosition(resolvedPosition);
         
         gamePanel.updatePlayerPosition(currentPlayer);
-        controlPanel.updateInfo(currentPlayer.getName() + " rolled a " + roll + " and moved to " + newPosition);
+        controlPanel.updateInfo(currentPlayer.getName() + " rolled a " + roll + " and moved to " + resolvedPosition);
         
         if (checkWinCondition()) {
             gameActive = false;
@@ -96,7 +102,7 @@ public class ChutesAndLadders {
         controlPanel.updatePlayerTurn(currentPlayer);
         
         if (!currentPlayer.isHuman()) {
-            // AI takes turn automatically after a short delay
+            // AI takes turn automatically after short delay
             Timer timer = new Timer(1000, e -> rollDice());
             timer.setRepeats(false);
             timer.start();
@@ -105,6 +111,22 @@ public class ChutesAndLadders {
 
     private boolean checkWinCondition() {
         return currentPlayer.getPosition() >= 100;
+    }
+    //gets valid positions for characters
+    private int resolvePosition(int startPosition) {
+        int newPos = startPosition;
+        int nextPos;
+
+        do {
+            nextPos = gameBoard.getNewPosition(newPos);
+            if (nextPos != newPos) {
+                newPos = nextPos;
+            } else {
+                break;
+            }
+        } while (true);
+
+        return newPos;
     }
 
     public static void main(String[] args) {

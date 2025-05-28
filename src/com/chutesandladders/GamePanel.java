@@ -11,6 +11,7 @@ public class GamePanel extends JPanel {
     private Image ladderImage;
     private Image chuteImage;
 //sets up game with board, images, and players
+    //@param players - an array of players in the game
     public GamePanel(Player[] players) {
         this.players = players;
         setPreferredSize(new Dimension(TILE_SIZE * BOARD_SIZE, TILE_SIZE * BOARD_SIZE));
@@ -25,7 +26,7 @@ public class GamePanel extends JPanel {
     	ladderImage = new ImageIcon(getClass().getResource("image/ladders.png")).getImage();
         chuteImage = new ImageIcon(getClass().getResource("image/snakesnake.png")).getImage();
     }
-    //creates tiles and board for game
+    //creates numbered tiles and board for game
     private void initializeBoard() {
         for (int row = BOARD_SIZE - 1; row >= 0; row--) {
             for (int col = 0; col < BOARD_SIZE; col++) {
@@ -43,7 +44,9 @@ public class GamePanel extends JPanel {
             }
         }
     }
-    
+    //@param row - the row index on the board
+    //@param col - the column index on the board
+    //@return the position number
     private int calculatePosition(int row, int col) {
         if (row % 2 == (BOARD_SIZE - 1) % 2) {
             return (BOARD_SIZE - row - 1) * BOARD_SIZE + col + 1;
@@ -53,6 +56,7 @@ public class GamePanel extends JPanel {
     }
 
     @Override
+    //@param g - the Graphics object used to draw the component
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
@@ -61,6 +65,7 @@ public class GamePanel extends JPanel {
         drawChutes(g2);
         drawPlayers(g);
     }
+    //@param g - the Graphics2D context to draw with
     private void drawLadders(Graphics2D g) {
     	//sets up the graphics for the ladders
     	drawLineBetweenTiles(g, ladderImage, 1, 38);
@@ -72,9 +77,8 @@ public class GamePanel extends JPanel {
         drawLineBetweenTiles(g, ladderImage, 51, 67);
         drawLineBetweenTiles(g, ladderImage, 71, 91);
         drawLineBetweenTiles(g, ladderImage, 80, 100);
-    	
-    	
     }
+    //@param g - the Graphics2D context to draw with
     private void drawChutes(Graphics2D g) {
     	//sets up the graphics for the snakes
     	drawLineBetweenTiles(g, chuteImage, 16, 6);
@@ -89,6 +93,10 @@ public class GamePanel extends JPanel {
         drawLineBetweenTiles(g, chuteImage, 98, 78);
     }
     //creates the line that needs to be drawn for either the chute or ladder
+    //@param g - the Graphics2D context to draw with
+    //@param img - the image to draw
+    //@param start - the starting position number
+    //@param end - the ending position number
     private void drawLineBetweenTiles(Graphics2D g, Image img, int start, int end) {
     	Point startPt = getTileCenter(start);
     	Point endPt = getTileCenter(end);
@@ -103,6 +111,8 @@ public class GamePanel extends JPanel {
         g2.dispose();
     	//g.drawLine(startPt.x, startPt.y, endPt.x, endPt.y);
     }
+    //@param position the position number (1 to 100)
+    //@return the center point in pixel coordinates
     private Point getTileCenter(int position) {
     	Point coords=getTileCoordinates(position);
     	return new Point(coords.x + TILE_SIZE/2, coords.y + TILE_SIZE/2);
@@ -118,6 +128,8 @@ public class GamePanel extends JPanel {
         }
     }
 //gets the coordinates of the tile based on the position of the character
+    //@param position the position number (1 to 100)
+    //@return the Point representing top-left pixel of the tile
     private Point getTileCoordinates(int position) {
         if (position < 1 || position > 100) return new Point(0, 0);
         position--;
@@ -135,7 +147,7 @@ public class GamePanel extends JPanel {
         int drawRow = BOARD_SIZE - 1 - row;
         return new Point(col * TILE_SIZE, drawRow * TILE_SIZE);
     }
-
+//@param player the player whose position has changed
     public void updatePlayerPosition(Player player) {
         repaint();
     }

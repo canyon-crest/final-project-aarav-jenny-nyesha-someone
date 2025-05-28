@@ -7,6 +7,7 @@ public class Ladder extends Jump {
     }
 
     @Override
+    //@return jump type - "ladder"
     public String getType() {
         return "Ladder";
     }

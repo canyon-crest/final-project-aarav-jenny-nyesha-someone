@@ -36,18 +36,22 @@ public class Board {
         jumps.put(71, new Ladder(71, 91));
         jumps.put(80, new Ladder(80, 100));
     }
-
+    //@param currentPos - current position of player
+    //@return new position of player(based on jump)
     public int getNewPosition(int currentPos) {
         if (jumps.containsKey(currentPos)) {
             return jumps.get(currentPos).getTargetPosition();
         }
         return Math.min(currentPos, SIZE);
     }
-
+    //@param position The board position to check.
+    // @return true if the position contains a chute; false otherwise.
     public boolean isChute(int position) {
         return jumps.containsKey(position) && jumps.get(position) instanceof Chute;
     }
-
+    //@param position The board position to check.
+    // @return true if the position contains a ladder; false otherwise.
+    
     public boolean isLadder(int position) {
         return jumps.containsKey(position) && jumps.get(position) instanceof Ladder;
     }

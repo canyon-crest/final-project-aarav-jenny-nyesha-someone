@@ -3,7 +3,10 @@ package com.chutesandladders;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
-
+/**
+ * Main class for game
+ * Manages logic, players, board, and user
+ */
 public class ChutesAndLadders {
     private JFrame mainFrame;
     private GamePanel gamePanel;
@@ -13,12 +16,12 @@ public class ChutesAndLadders {
     private Board gameBoard;
     private boolean gameActive;
     private Random random;
-
+    //creates new game and sets up UI
     public ChutesAndLadders() {
         initializeGame();
         setupUI();
     }
-
+  //initializes game state(players, board, and number generator)
     private void initializeGame() {
         players = new Player[2];
         players[0] = new Player("Player 1", true);
@@ -28,7 +31,7 @@ public class ChutesAndLadders {
         gameActive = true;
         random = new Random();
     }
-//set game up
+    //sets up UI
     private void setupUI() {
         mainFrame = new JFrame("Chutes and Ladders Showdown");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,7 +46,7 @@ public class ChutesAndLadders {
 
         mainFrame.setVisible(true);
     }
-
+    //rolls dice and deals with player turns
     public void rollDice() {
         if (!gameActive) return;
 
@@ -56,7 +59,8 @@ public class ChutesAndLadders {
             aiPlayerTurn(roll);
         }
     }
-
+    //executes player turn
+  //@param roll - number on dice
     private void humanPlayerTurn(int roll) {
         currentPlayer.move(roll);
         //int newPosition = gameBoard.getNewPosition(currentPlayer.getPosition());
@@ -76,7 +80,7 @@ public class ChutesAndLadders {
         
         switchPlayer();
     }
-
+//@param roll - number on dice
     private void aiPlayerTurn(int roll) {
         currentPlayer.move(roll);
         //int newPosition = gameBoard.getNewPosition(currentPlayer.getPosition());
@@ -96,7 +100,7 @@ public class ChutesAndLadders {
         
         switchPlayer();
     }
-
+    //switches turn
     private void switchPlayer() {
         currentPlayer = (currentPlayer == players[0]) ? players[1] : players[0];
         controlPanel.updatePlayerTurn(currentPlayer);
@@ -108,11 +112,13 @@ public class ChutesAndLadders {
             timer.start();
         }
     }
-
+    //checks for winner
     private boolean checkWinCondition() {
         return currentPlayer.getPosition() >= 100;
     }
     //gets valid positions for characters
+    //@param startPostition - starting position before resolving position
+    //@return resolved position based on jumps
     private int resolvePosition(int startPosition) {
         int newPos = startPosition;
         int nextPos;
@@ -128,7 +134,7 @@ public class ChutesAndLadders {
 
         return newPos;
     }
-
+    //launches game with main method
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new ChutesAndLadders());
     }

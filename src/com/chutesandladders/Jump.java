@@ -9,16 +9,17 @@ public abstract class Jump implements Jumpable {
         this.start = start;
         this.end = end;
     }
-
+//@return start position
     public int getStartPosition() {
         return start;
     }
-
+//@return end position
     public int getEndPosition() {
         return end;
     }
 
     @Override
+    //@return end position
     public int getTargetPosition() {
         return end;
     }
